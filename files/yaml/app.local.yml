@@ -1,0 +1,15 @@
+configs:
+  server:
+    host: "0.0.0.0"
+    port: "8080"
+    timeout:
+      server: 30
+      read: 15
+      write: 10
+      idle: 5
+
+  mongodb:
+    user: qateam
+    password: superteam
+    host: k8s-qacentra-mongodb-a9b3f6b30a-3e6fe28d062b9df5.elb.ap-southeast-3.amazonaws.com
+    dbname: phoenix
