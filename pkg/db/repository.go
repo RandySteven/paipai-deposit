@@ -9,8 +9,8 @@ import (
 	"reflect"
 	"strings"
 
-	repository_interfaces "github.com/RandySteven/go-kopi/interfaces/repositories"
-	"github.com/RandySteven/go-kopi/queries"
+	repository_interfaces "github.com/RandySteven/paipai-deposit/interfaces/repositories"
+	"github.com/RandySteven/paipai-deposit/queries"
 )
 
 // SQL command constants for query validation.

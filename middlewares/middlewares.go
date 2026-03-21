@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/RandySteven/go-kopi/enums"
+	"github.com/RandySteven/paipai-deposit/enums"
 )
 
 type (

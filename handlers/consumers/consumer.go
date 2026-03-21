@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"log"
 
-	"github.com/RandySteven/go-kopi/caches"
-	nsq_client "github.com/RandySteven/go-kopi/pkg/nsq"
-	"github.com/RandySteven/go-kopi/repositories"
-	"github.com/RandySteven/go-kopi/topics"
+	"github.com/RandySteven/paipai-deposit/caches"
+	nsq_client "github.com/RandySteven/paipai-deposit/pkg/nsq"
+	"github.com/RandySteven/paipai-deposit/repositories"
+	"github.com/RandySteven/paipai-deposit/topics"
 )
 
 type (
@@ -73,7 +73,7 @@ func (r *Runners) Run(ctx context.Context) error {
 
 func NewConsumers(
 	repo *repositories.Repositories,
-	cache *caches.Caches,
+	cache caches.Caches,
 	topics *topics.Topics,
 ) *Consumers {
 	return &Consumers{}

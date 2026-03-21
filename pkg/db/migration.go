@@ -3,12 +3,14 @@ package mysql_client
 import (
 	"context"
 
-	"github.com/RandySteven/go-kopi/queries"
+	"github.com/RandySteven/paipai-deposit/queries"
 )
 
 func registerMigration() []queries.TableMigration {
 	return []queries.TableMigration{
-		queries.MigrateUser,
+		queries.MigrateAccount,
+		queries.MigrateBalance,
+		queries.MigrateTransactionHistory,
 	}
 }
 

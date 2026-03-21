@@ -4,8 +4,8 @@ import (
 	"context"
 	"log"
 
-	"github.com/RandySteven/go-kopi/apps"
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/apps"
+	"github.com/RandySteven/paipai-deposit/configs"
 	"github.com/joho/godotenv"
 )
 

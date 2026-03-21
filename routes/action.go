@@ -3,7 +3,7 @@ package routes
 import (
 	"net/http"
 
-	"github.com/RandySteven/go-kopi/enums"
+	"github.com/RandySteven/paipai-deposit/enums"
 )
 
 // registerEndpointRouter creates a new Router with the given configuration.

@@ -3,7 +3,8 @@ package enums
 type RouterPrefix string
 
 const (
-	AuthPrefix RouterPrefix = "auth"
+	AuthPrefix    RouterPrefix = "auth"
+	DepositPrefix RouterPrefix = "deposits"
 )
 
 func (prefix RouterPrefix) ToString() string {

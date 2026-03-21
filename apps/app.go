@@ -3,17 +3,17 @@ package apps
 import (
 	"context"
 
-	"github.com/RandySteven/go-kopi/caches"
-	"github.com/RandySteven/go-kopi/configs"
-	"github.com/RandySteven/go-kopi/handlers/consumers"
-	rest_handler "github.com/RandySteven/go-kopi/handlers/rests"
-	mysql_client "github.com/RandySteven/go-kopi/pkg/db"
-	nsq_client "github.com/RandySteven/go-kopi/pkg/nsq"
-	redis_client "github.com/RandySteven/go-kopi/pkg/redis"
-	temporal_client "github.com/RandySteven/go-kopi/pkg/temporal"
-	"github.com/RandySteven/go-kopi/repositories"
-	"github.com/RandySteven/go-kopi/topics"
-	"github.com/RandySteven/go-kopi/usecases"
+	"github.com/RandySteven/paipai-deposit/caches"
+	"github.com/RandySteven/paipai-deposit/configs"
+	"github.com/RandySteven/paipai-deposit/handlers/consumers"
+	rest_handler "github.com/RandySteven/paipai-deposit/handlers/rests"
+	mysql_client "github.com/RandySteven/paipai-deposit/pkg/db"
+	nsq_client "github.com/RandySteven/paipai-deposit/pkg/nsq"
+	redis_client "github.com/RandySteven/paipai-deposit/pkg/redis"
+	temporal_client "github.com/RandySteven/paipai-deposit/pkg/temporal"
+	"github.com/RandySteven/paipai-deposit/repositories"
+	"github.com/RandySteven/paipai-deposit/topics"
+	"github.com/RandySteven/paipai-deposit/usecases"
 )
 
 type (
@@ -50,11 +50,11 @@ func NewApp(config *configs.Config) (*App, error) {
 	}, nil
 }
 
-func (a *App) PrepareHttpHandler(ctx context.Context) *rest_handler.Rests {
+func (a *App) PrepareHttpHandler(ctx context.Context) *rest_handler.Deposits {
 	repositories := repositories.NewRepositories(a.MySQL.Client())
 	caches := caches.NewCaches(a.Redis.Client())
 	usecases := usecases.NewUsecases(repositories, caches, a.Nsq, a.Temporal)
-	return rest_handler.NewRests(usecases)
+	return rest_handler.NewDeposits(usecases)
 }
 
 func (a *App) RefreshRedis(ctx context.Context) error {

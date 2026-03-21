@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 
-	"github.com/RandySteven/go-kopi/apperror"
+	"github.com/RandySteven/paipai-deposit/apperror"
 )
 
 type (

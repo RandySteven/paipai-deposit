@@ -11,8 +11,8 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/RandySteven/go-kopi/enums"
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/enums"
+	"github.com/RandySteven/paipai-deposit/configs"
 	"github.com/go-redis/redis_rate/v10"
 	"github.com/redis/go-redis/v9"
 )

@@ -7,7 +7,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/RandySteven/go-kopi/entities/models"
+	"github.com/RandySteven/paipai-deposit/entities/models"
 	"github.com/golang-jwt/jwt/v5"
 )
 
@@ -43,7 +43,7 @@ type (
 // Example:
 //
 //	accessToken, refreshToken := GenerateTokens(&user)
-func GenerateTokens(user *models.User) (string, string) {
+func GenerateTokens(user *models.Account) (string, string) {
 
 	access := &JWTAccessClaim{
 		UserID: user.ID,
@@ -64,7 +64,7 @@ func GenerateTokens(user *models.User) (string, string) {
 
 	refresh := &JWTRefreshClaim{
 		UserID: user.ID,
-		Email:  user.Email,
+		Email:  user.CIFNumber,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Issuer:    "Applications",
 			IssuedAt:  jwt.NewNumericDate(time.Now()),

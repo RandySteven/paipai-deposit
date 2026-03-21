@@ -24,7 +24,7 @@ func getRedisTimeout() time.Duration {
 // Example:
 //
 //	err := Set(ctx, client, "user:1", &user)
-func Set[T any](ctx context.Context, redis *redis.Client, key string, value *T) (err error) {
+func Set(ctx context.Context, redis *redis.Client, key string, value any) (err error) {
 	jsonData, err := json.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("json marshal err: %v", err)
@@ -38,7 +38,7 @@ func Set[T any](ctx context.Context, redis *redis.Client, key string, value *T) 
 // Example:
 //
 //	user, err := Get[User](ctx, client, "user:1")
-func Get[T any](ctx context.Context, client *redis.Client, key string) (value *T, err error) {
+func Get(ctx context.Context, client *redis.Client, key string) (value any, err error) {
 	val, err := client.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil, err
@@ -56,7 +56,7 @@ func Get[T any](ctx context.Context, client *redis.Client, key string) (value *T
 // Example:
 //
 //	err := SetMultiple(ctx, client, "users:all", users)
-func SetMultiple[T any](ctx context.Context, redis *redis.Client, key string, value []*T) (err error) {
+func SetMultiple(ctx context.Context, redis *redis.Client, key string, value []any) (err error) {
 	jsonData, err := json.Marshal(value)
 	if err != nil {
 		return fmt.Errorf("json marshal err: %v", err)
@@ -70,7 +70,7 @@ func SetMultiple[T any](ctx context.Context, redis *redis.Client, key string, va
 // Example:
 //
 //	users, err := GetMultiple[User](ctx, client, "users:all")
-func GetMultiple[T any](ctx context.Context, redis *redis.Client, key string) (value []*T, err error) {
+func GetMultiple(ctx context.Context, redis *redis.Client, key string) (value []any, err error) {
 	val, err := redis.Get(ctx, key).Bytes()
 	if err != nil {
 		return nil, err

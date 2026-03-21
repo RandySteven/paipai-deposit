@@ -4,11 +4,11 @@ import (
 	"context"
 	"database/sql"
 
-	repository_interfaces "github.com/RandySteven/go-kopi/interfaces/repositories"
+	repository_interfaces "github.com/RandySteven/paipai-deposit/interfaces/repositories"
 )
 
 type Repositories struct {
-	UserRepository repository_interfaces.UserRepository
+	AccountRepository repository_interfaces.AccountRepository
 }
 
 func NewRepositories(db *sql.DB) *Repositories {
@@ -17,6 +17,6 @@ func NewRepositories(db *sql.DB) *Repositories {
 	}
 
 	return &Repositories{
-		UserRepository: newUserRepository(dbx),
+		AccountRepository: NewAccountRepository(dbx),
 	}
 }

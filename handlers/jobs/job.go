@@ -1,6 +1,6 @@
 package jobs
 
-import job_interfaces "github.com/RandySteven/go-kopi/interfaces/handlers/jobs"
+import job_interfaces "github.com/RandySteven/paipai-deposit/interfaces/handlers/jobs"
 
 type (
 	Job struct {

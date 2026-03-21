@@ -4,7 +4,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"github.com/RandySteven/go-kopi/queries"
+	"github.com/RandySteven/paipai-deposit/queries"
 	"log"
 	"reflect"
 	"strings"

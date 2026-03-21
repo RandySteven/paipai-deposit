@@ -4,7 +4,7 @@ import (
 	"context"
 	"time"
 
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/configs"
 	"github.com/robfig/cron/v3"
 )
 

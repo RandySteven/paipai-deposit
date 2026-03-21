@@ -2,7 +2,7 @@ package utils
 
 import (
 	"context"
-	"github.com/RandySteven/go-kopi/enums"
+	"github.com/RandySteven/paipai-deposit/enums"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 )

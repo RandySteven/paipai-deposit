@@ -6,7 +6,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/configs"
 	"go.temporal.io/sdk/activity"
 	"go.temporal.io/sdk/client"
 	"go.temporal.io/sdk/temporal"

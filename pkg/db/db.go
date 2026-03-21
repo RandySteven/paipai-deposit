@@ -10,7 +10,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/configs"
 	_ "github.com/jackc/pgx/v5"
 	_ "github.com/lib/pq"
 )

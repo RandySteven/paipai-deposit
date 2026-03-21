@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/RandySteven/go-kopi/enums"
-	redis_client "github.com/RandySteven/go-kopi/pkg/redis"
-	"github.com/RandySteven/go-kopi/utils"
+	"github.com/RandySteven/paipai-deposit/enums"
+	redis_client "github.com/RandySteven/paipai-deposit/pkg/redis"
+	"github.com/RandySteven/paipai-deposit/utils"
 	ip "github.com/vikram1565/request-ip"
 )
 

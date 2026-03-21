@@ -14,9 +14,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/RandySteven/go-kopi/enums"
-	rest_handler "github.com/RandySteven/go-kopi/handlers/rests"
-	"github.com/RandySteven/go-kopi/middlewares"
+	"github.com/RandySteven/paipai-deposit/enums"
+	rest_handler "github.com/RandySteven/paipai-deposit/handlers/rests"
+	"github.com/RandySteven/paipai-deposit/middlewares"
 	"github.com/gorilla/mux"
 )
 
@@ -77,7 +77,7 @@ type (
 //	    Put("UpdateUser", "/{id}", api.UserHTTP.UpdateUser, enums.AuthenticationMiddleware),
 //	    Delete("DeleteUser", "/{id}", api.UserHTTP.DeleteUser, enums.AuthenticationMiddleware),
 //	}
-func NewEndpointRouters(api *rest_handler.Rests) RouterPrefix {
+func NewEndpointRouters(api *rest_handler.Deposits) RouterPrefix {
 	endpointRouters := make(RouterPrefix)
 
 	// ============================================================
@@ -86,9 +86,15 @@ func NewEndpointRouters(api *rest_handler.Rests) RouterPrefix {
 	// POST /auth/register - Register a new user account
 	// POST /auth/login    - Authenticate user and get token
 	// ============================================================
-	endpointRouters[enums.AuthPrefix] = []*Router{
-		Post("RegisterUser", "/register", api.UserRest.RegisterUser),
-		Post("LoginUser", "/login", api.UserRest.LoginUser),
+	endpointRouters[enums.DepositPrefix] = []*Router{
+		// Post("LoginUser", "/login", api.UserRest.LoginUser),
+		Post("CreateAccount", "/accounts", api.CreateAccount),
+		Post("AccountInquiry", "/accounts/{account_number}", api.AccountInquiry),
+		Post("BalanceInquiry", "/accounts/{account_number}/balance", api.BalanceInquiry),
+		Post("Auth", "/accounts/{account_number}/auth", api.Auth),
+		Post("Capture", "/accounts/{account_number}/capture", api.Capture),
+		Post("TransactionHistory", "/accounts/{account_number}/transaction-history", api.TransactionHistory),
+		Post("TransactionDetail", "/accounts/{account_number}/transaction-detail", api.TransactionDetail),
 	}
 
 	return endpointRouters
@@ -122,10 +128,10 @@ func InitRouter(routers RouterPrefix, r *mux.Router) {
 		clientMiddleware.RateLimiterMiddleware,
 	)
 
-	onboardingRouter := r.PathPrefix(enums.AuthPrefix.ToString()).Subrouter()
-	for _, routers := range routers[enums.AuthPrefix] {
-		routers.RouterLog(enums.AuthPrefix.ToString())
-		onboardingRouter.HandleFunc(routers.path, routers.handler).Methods(routers.method)
+	depositsRouter := r.PathPrefix(enums.AuthPrefix.ToString()).Subrouter()
+	for _, routers := range routers[enums.DepositPrefix] {
+		routers.RouterLog(enums.DepositPrefix.ToString())
+		depositsRouter.HandleFunc(routers.path, routers.handler).Methods(routers.method)
 	}
 }
 

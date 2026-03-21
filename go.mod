@@ -1,4 +1,4 @@
-module github.com/RandySteven/go-kopi
+module github.com/RandySteven/paipai-deposit
 
 go 1.24.0
 
@@ -26,9 +26,7 @@ require (
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
-	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/facebookgo/clock v0.0.0-20150410010913-600d898af40a // indirect
-	github.com/go-ini/ini v1.67.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/mock v1.6.0 // indirect
 	github.com/golang/snappy v1.0.0 // indirect
@@ -38,28 +36,19 @@ require (
 	github.com/jackc/pgservicefile v0.0.0-20221227161230-091c0ba34f0a // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/klauspost/compress v1.18.3 // indirect
-	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
-	github.com/klauspost/crc32 v1.3.0 // indirect
-	github.com/minio/crc64nvme v1.1.1 // indirect
-	github.com/minio/md5-simd v1.1.2 // indirect
-	github.com/minio/minio-go/v7 v7.0.98 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/nexus-rpc/sdk-go v0.5.1 // indirect
-	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/robfig/cron v1.2.0 // indirect
 	github.com/robfig/cron/v3 v3.0.1
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
-	github.com/rs/xid v1.6.0 // indirect
 	github.com/stretchr/objx v0.5.3 // indirect
 	github.com/stretchr/testify v1.11.1 // indirect
-	github.com/tinylib/msgp v1.6.3 // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
 	github.com/xdg-go/scram v1.1.2 // indirect
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.temporal.io/api v1.62.0 // indirect
-	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/net v0.49.0 // indirect
 	golang.org/x/sync v0.19.0 // indirect
 	golang.org/x/sys v0.40.0 // indirect

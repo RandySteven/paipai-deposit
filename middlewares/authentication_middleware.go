@@ -4,9 +4,9 @@ import (
 	"context"
 	"net/http"
 
-	"github.com/RandySteven/go-kopi/enums"
-	jwt_client "github.com/RandySteven/go-kopi/pkg/jwt"
-	"github.com/RandySteven/go-kopi/utils"
+	"github.com/RandySteven/paipai-deposit/enums"
+	jwt_client "github.com/RandySteven/paipai-deposit/pkg/jwt"
+	"github.com/RandySteven/paipai-deposit/utils"
 	"github.com/golang-jwt/jwt/v5"
 )
 

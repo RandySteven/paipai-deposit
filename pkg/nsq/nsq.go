@@ -9,7 +9,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/RandySteven/go-kopi/configs"
+	"github.com/RandySteven/paipai-deposit/configs"
 	"github.com/nsqio/go-nsq"
 )
 
