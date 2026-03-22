@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/RandySteven/paipai-deposit/apperror"
@@ -29,6 +30,7 @@ type usecases struct {
 
 // CreateAccount implements [usecases_interfaces.DepositUsecase].
 func (u *usecases) CreateAccount(ctx context.Context, request *requests.CreateAccountRequest) (response *responses.CreateAccountResponse, appError *apperror.CustomError) {
+	log.Println("CreateAccount", request)
 	return u.accountWorkflow.CreateAccount(ctx, request)
 }
 
@@ -94,10 +96,18 @@ func (u *usecases) Capture(ctx context.Context, request *requests.CaptureRequest
 	return
 }
 
-func NewUsecases(repositories *repositories.Repositories,
+func NewUsecases(repositories repositories.Repositories,
 	redis caches.Caches,
 	nsq nsq_client.Nsq,
 	temporal temporal_client.Temporal,
 ) usecases_interfaces.DepositUsecase {
-	return &usecases{}
+	workflowExecution := temporal_client.NewWorkflowExecution(temporal)
+	us := &usecases{
+		accountWorkflow:   accounts.NewAccountWorkflow(workflowExecution, repositories.AccountRepository, repositories.BalanceRepository),
+		accountRepository: repositories.AccountRepository,
+		balanceRepository: repositories.BalanceRepository,
+		cache:             redis,
+		nsq:               nsq,
+	}
+	return us
 }

@@ -7,19 +7,19 @@ import (
 	"github.com/RandySteven/paipai-deposit/entities/models"
 )
 
-func (a *accountWorkflow) createBalance(ctx context.Context, executionData *ExecutionData) (err error) {
+func (a *accountWorkflow) createBalance(ctx context.Context, executionData *ExecutionData) (*ExecutionData, error) {
 
 	balance := &models.Balance{
 		AccountID:     executionData.Account.ID,
 		BalanceAmount: 0,
 	}
 
-	balance, err = a.balanceRepository.Save(ctx, balance)
+	balance, err := a.balanceRepository.Save(ctx, balance)
 	if err != nil {
-		return apperror.NewCustomError(apperror.ErrInternalServer, "failed to save balance", err)
+		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to save balance", err)
 	}
 
 	executionData.Balance = balance
 	executionData.SetActivity(activityUpdateAccountStatus)
-	return nil
+	return executionData, nil
 }

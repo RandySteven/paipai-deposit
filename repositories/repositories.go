@@ -9,6 +9,7 @@ import (
 
 type Repositories struct {
 	AccountRepository repository_interfaces.AccountRepository
+	BalanceRepository repository_interfaces.BalanceRepository
 }
 
 func NewRepositories(db *sql.DB) *Repositories {
@@ -18,5 +19,6 @@ func NewRepositories(db *sql.DB) *Repositories {
 
 	return &Repositories{
 		AccountRepository: NewAccountRepository(dbx),
+		BalanceRepository: NewBalanceRepository(dbx),
 	}
 }

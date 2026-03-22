@@ -7,9 +7,10 @@ import (
 	"go.temporal.io/sdk/workflow"
 )
 
-func (a *accountWorkflow) createAccount(ctx workflow.Context, request *requests.CreateAccountRequest) (response *responses.CreateAccountResponse, appError *apperror.CustomError) {
+func (a *accountWorkflow) createAccount(ctx workflow.Context, request *requests.CreateAccountRequest) (*responses.CreateAccountResponse, error) {
 	executionData := &ExecutionData{
 		CIFNumber: request.CIFNumber,
+		Response:  &responses.CreateAccountResponse{},
 	}
 
 	err := a.workflowExecution.Execute(ctx, executionData)
@@ -17,8 +18,8 @@ func (a *accountWorkflow) createAccount(ctx workflow.Context, request *requests.
 		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to execute workflow", err)
 	}
 
-	executionData.Response = &responses.CreateAccountResponse{
-		ID: executionData.Account.AccountNumber,
+	if executionData.Account == nil {
+		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "create account workflow completed without account state", nil)
 	}
 
 	return executionData.Response, nil

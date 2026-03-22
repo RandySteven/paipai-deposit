@@ -1,6 +1,6 @@
-// Package mysql_client provides a PostgreSQL database client wrapper with connection
-// pooling, health checks, and lifecycle management. Despite the package name,
-// it currently implements a PostgreSQL connection using the lib/pq driver.
+// Package mysql_client provides a MySQL database client wrapper with connection
+// pooling, health checks, and lifecycle management. If mysql.host is empty,
+// it falls back to PostgreSQL using configs.postgres (lib/pq).
 package mysql_client
 
 import (
@@ -11,7 +11,7 @@ import (
 	"time"
 
 	"github.com/RandySteven/paipai-deposit/configs"
-	_ "github.com/jackc/pgx/v5"
+	_ "github.com/go-sql-driver/mysql"
 	_ "github.com/lib/pq"
 )
 
@@ -49,23 +49,32 @@ func (m *mysqlClient) Ping() error {
 	return m.db.Ping()
 }
 
-// NewMYSQLClient creates a new PostgreSQL database client with connection pooling.
-// It configures the connection with:
-//   - MaxIdleConns: 10
-//   - MaxOpenConns: 8
-//   - ConnMaxLifetime: 10 minutes
-//   - ConnMaxIdleTime: 8 minutes
-//
-// Returns an error if the connection cannot be established or ping fails.
+func dbDriverAndDSN(config *configs.Config) (driver string, dsn string) {
+	m := config.Configs.Mysql
+	if m.Host != "" {
+		port := m.Port
+		if port == "" {
+			port = "3306"
+		}
+		return "mysql", fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?parseTime=true&loc=UTC&charset=utf8mb4",
+			m.DbUser, m.DbPass, m.Host, port, m.DbName)
+	}
+	p := config.Configs.Postgres
+	port := p.Port
+	if port == "" {
+		port = "5432"
+	}
+	return "postgres", fmt.Sprintf("postgresql://%s:%s@%s:%s/%s?sslmode=disable",
+		p.DbUser, p.DbPass, p.Host, port, p.DbName)
+}
+
+// NewMYSQLClient creates a MySQL client when configs.mysql.host is set; otherwise
+// a PostgreSQL client from configs.postgres. Connection pool: MaxIdleConns 10,
+// MaxOpenConns 8, ConnMaxLifetime 10m, ConnMaxIdleTime 8m.
 func NewMYSQLClient(config *configs.Config) (*mysqlClient, error) {
-	conn := fmt.Sprintf("postgresql://%s:%s@%s/%s?sslmode=require",
-		config.Configs.Postgres.DbUser,
-		config.Configs.Postgres.DbPass,
-		config.Configs.Postgres.Host,
-		config.Configs.Postgres.DbName,
-	)
-	log.Println(conn)
-	db, err := sql.Open("postgres", conn)
+	driver, conn := dbDriverAndDSN(config)
+	log.Println(driver+":", conn)
+	db, err := sql.Open(driver, conn)
 	if err != nil {
 		return nil, err
 	}

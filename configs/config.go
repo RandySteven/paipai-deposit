@@ -32,6 +32,15 @@ type (
 				DbPass string `yaml:"dbpass"`
 			} `yaml:"postgres"`
 
+			// Mysql contains MySQL database connection settings.
+			Mysql struct {
+				Host   string `yaml:"host"`
+				Port   string `yaml:"port"`
+				DbName string `yaml:"dbname"`
+				DbUser string `yaml:"dbuser"`
+				DbPass string `yaml:"dbpass"`
+			} `yaml:"mysql"`
+
 			// Mongodb contains MongoDB connection settings.
 			Mongodb struct {
 				User     string `yaml:"user"`

@@ -22,7 +22,13 @@ type CustomError struct {
 }
 
 func (cu *CustomError) Error() string {
-	return cu.err.Error()
+	if cu == nil {
+		return ""
+	}
+	if cu.err != nil {
+		return cu.err.Error()
+	}
+	return cu.LogMessage
 }
 
 func NewCustomError(errType ErrType, logMessage string, err error) *CustomError {

@@ -53,7 +53,7 @@ func NewApp(config *configs.Config) (*App, error) {
 func (a *App) PrepareHttpHandler(ctx context.Context) *rest_handler.Deposits {
 	repositories := repositories.NewRepositories(a.MySQL.Client())
 	caches := caches.NewCaches(a.Redis.Client())
-	usecases := usecases.NewUsecases(repositories, caches, a.Nsq, a.Temporal)
+	usecases := usecases.NewUsecases(*repositories, caches, a.Nsq, a.Temporal)
 	return rest_handler.NewDeposits(usecases)
 }
 

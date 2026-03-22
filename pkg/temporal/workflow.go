@@ -39,15 +39,15 @@ type (
 	}
 
 	WorkflowExecutionData struct {
-		ID            uint64
-		WorkflowID    string
-		RunID         string
+		ID         uint64
+		WorkflowID string
+		RunID      string
 
 		activity      map[string]*ActivityExecutionInfo
 		firstActivity string
 		StartedAt     time.Time
 
-		CompletedAt   time.Time
+		CompletedAt time.Time
 
 		temporalClient Temporal
 	}

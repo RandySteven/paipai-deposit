@@ -55,6 +55,7 @@ func (c *Config) Run(r *mux.Router) {
 		WriteTimeout: c.Configs.Server.Timeout.Write * time.Second,
 		IdleTimeout:  c.Configs.Server.Timeout.Idle * time.Second,
 	}
+	log.Printf("Server is running on %s", srv.Addr)
 	go func() {
 		if err := srv.ListenAndServe(); err != nil && err != http.ErrServerClosed {
 			log.Fatalf("listen: %s\n", err)

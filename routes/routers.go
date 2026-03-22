@@ -88,13 +88,13 @@ func NewEndpointRouters(api *rest_handler.Deposits) RouterPrefix {
 	// ============================================================
 	endpointRouters[enums.DepositPrefix] = []*Router{
 		// Post("LoginUser", "/login", api.UserRest.LoginUser),
-		Post("CreateAccount", "/accounts", api.CreateAccount),
+		Post("CreateAccount", "/create-account", api.CreateAccount),
 		Post("AccountInquiry", "/accounts/{account_number}", api.AccountInquiry),
 		Post("BalanceInquiry", "/accounts/{account_number}/balance", api.BalanceInquiry),
-		Post("Auth", "/accounts/{account_number}/auth", api.Auth),
-		Post("Capture", "/accounts/{account_number}/capture", api.Capture),
-		Post("TransactionHistory", "/accounts/{account_number}/transaction-history", api.TransactionHistory),
-		Post("TransactionDetail", "/accounts/{account_number}/transaction-detail", api.TransactionDetail),
+		Post("Auth", "/auth", api.Auth),
+		Post("Capture", "/capture", api.Capture),
+		Post("TransactionHistory", "/transaction-history", api.TransactionHistory),
+		Post("TransactionDetail", "/transaction-detail", api.TransactionDetail),
 	}
 
 	return endpointRouters
@@ -128,7 +128,8 @@ func InitRouter(routers RouterPrefix, r *mux.Router) {
 		clientMiddleware.RateLimiterMiddleware,
 	)
 
-	depositsRouter := r.PathPrefix(enums.AuthPrefix.ToString()).Subrouter()
+	// Path must start with "/" so it matches request paths like "/deposits/create-account".
+	depositsRouter := r.PathPrefix("/" + enums.DepositPrefix.ToString()).Subrouter()
 	for _, routers := range routers[enums.DepositPrefix] {
 		routers.RouterLog(enums.DepositPrefix.ToString())
 		depositsRouter.HandleFunc(routers.path, routers.handler).Methods(routers.method)
@@ -138,5 +139,5 @@ func InitRouter(routers RouterPrefix, r *mux.Router) {
 // RouterLog prints route information to the console during startup.
 // Format: "METHOD | /prefix/path"
 func (router *Router) RouterLog(prefix string) {
-	log.Printf("%12s | %4s/ \n", router.method, prefix+router.path)
+	log.Printf("%12s | /%s%s\n", router.method, prefix, router.path)
 }

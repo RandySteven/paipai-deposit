@@ -1,15 +1,32 @@
 configs:
   server:
     host: "0.0.0.0"
-    port: "8080"
+    port: "8081"
     timeout:
       server: 30
       read: 15
       write: 10
       idle: 5
 
-  mongodb:
-    user: qateam
-    password: superteam
-    host: k8s-qacentra-mongodb-a9b3f6b30a-3e6fe28d062b9df5.elb.ap-southeast-3.amazonaws.com
-    dbname: phoenix
+  mysql:
+    host: "127.0.0.1"
+    port: "3306"
+    dbname: "paipai_deposit"
+    dbuser: "root"
+    dbpass: ""
+
+  redis:
+    host: "127.0.0.1"
+    port: "6379"
+    password: ""
+
+  temporal:
+    host: "127.0.0.1"
+    port: "7233"
+    task_queue: "paipai-deposit"
+    namespace: "default"
+    workerOptions:
+      maxConcurrentActivityExecutionSize: 100
+      workerActivitiesPerSecond: 100.0
+      maxConcurrentLocalActivityExecutionSize: 100
+      workerLocalActivitiesPerSecond: 100.0

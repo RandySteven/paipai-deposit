@@ -7,11 +7,11 @@ cmd_folder = ./cmd/
 gorun = @go run
 
 ifeq ($(ENV),prod)
-	yaml_file = ./files/yml/configs/task.prod.yml
+	yaml_file = ./files/yaml/app.prod.yml
 else ifeq ($(ENV),staging)
-	yaml_file = ./files/yml/configs/task.docker.yml
+	yaml_file = ./files/yaml/app.docker.yml
 else ifeq ($(ENV),dev)
-	yaml_file = ./files/yml/configs/task.local.yml
+	yaml_file = ./files/yaml/app.local.yml
 else
 	$(error unknown variable in .env file)
 endif

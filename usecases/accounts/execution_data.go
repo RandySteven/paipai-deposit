@@ -3,6 +3,7 @@ package accounts
 import (
 	"github.com/RandySteven/paipai-deposit/entities/models"
 	"github.com/RandySteven/paipai-deposit/entities/payloads/responses"
+	temporal_client "github.com/RandySteven/paipai-deposit/pkg/temporal"
 )
 
 type ExecutionData struct {
@@ -12,13 +13,15 @@ type ExecutionData struct {
 	Balance *models.Balance
 
 	Response *responses.CreateAccountResponse
-	Activity string
+	CurrentActivity string
 }
 
+var _ temporal_client.NavigatableActivity = &ExecutionData{}
+
 func (e *ExecutionData) SetActivity(activityName string) {
-	e.Activity = activityName
+	e.CurrentActivity = activityName
 }
 
 func (e *ExecutionData) GetActivity() string {
-	return e.Activity
+	return e.CurrentActivity
 }

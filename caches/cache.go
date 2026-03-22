@@ -21,6 +21,10 @@ type (
 	}
 )
 
+// Caches is a non-generic interface (values are untyped via any) so call sites can use
+// caches.Caches without type arguments. A generic Caches[T] would require Caches[any] here.
+var _ Caches = (*caches)(nil)
+
 // Del implements [Caches].
 func (c *caches) Del(ctx context.Context, key string) error {
 	return redis_client.Del(ctx, c.redis, key)
