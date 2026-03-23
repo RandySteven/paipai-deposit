@@ -2,13 +2,10 @@ package usecases
 
 import (
 	"context"
-	"fmt"
 	"log"
-	"time"
 
 	"github.com/RandySteven/paipai-deposit/apperror"
 	"github.com/RandySteven/paipai-deposit/caches"
-	"github.com/RandySteven/paipai-deposit/entities/models"
 	"github.com/RandySteven/paipai-deposit/entities/payloads/requests"
 	"github.com/RandySteven/paipai-deposit/entities/payloads/responses"
 	repository_interfaces "github.com/RandySteven/paipai-deposit/interfaces/repositories"
@@ -17,10 +14,14 @@ import (
 	temporal_client "github.com/RandySteven/paipai-deposit/pkg/temporal"
 	"github.com/RandySteven/paipai-deposit/repositories"
 	"github.com/RandySteven/paipai-deposit/usecases/accounts"
+	"github.com/RandySteven/paipai-deposit/usecases/auth"
+	"github.com/RandySteven/paipai-deposit/usecases/capture"
 )
 
 type usecases struct {
 	accountWorkflow              accounts.AccountWorkflow
+	captureWorkflow              capture.CaptureWorkflow
+	authWorkflow                 auth.AuthWorkflow
 	accountRepository            repository_interfaces.AccountRepository
 	balanceRepository            repository_interfaces.BalanceRepository
 	transactionHistoryRepository repository_interfaces.TransactionHistoryRepository
@@ -64,96 +65,96 @@ func (u *usecases) GetAccountList(ctx context.Context, cifNumber string) (respon
 }
 
 func (u *usecases) Auth(ctx context.Context, request *requests.AuthRequest) (response *responses.TransferResponse, appError *apperror.CustomError) {
-	cacheKey := fmt.Sprintf("auth:%s:%s", request.AccountNumber, request.IdempotencyKey)
+	// cacheKey := fmt.Sprintf("auth:%s:%s", request.AccountNumber, request.IdempotencyKey)
 
-	response = &responses.TransferResponse{
-		IdempotencyKey: request.IdempotencyKey,
-		AccountNumber:  request.AccountNumber,
-		Amount:         request.Amount,
-		Status:         "AUTH",
-		CreatedAt:      time.Now(),
-		UpdatedAt:      time.Now(),
-	}
+	// response = &responses.TransferResponse{
+	// 	IdempotencyKey: request.IdempotencyKey,
+	// 	AccountNumber:  request.AccountNumber,
+	// 	Amount:         request.Amount,
+	// 	Status:         "AUTH",
+	// 	CreatedAt:      time.Now(),
+	// 	UpdatedAt:      time.Now(),
+	// }
 
-	err := u.cache.Set(ctx, cacheKey, response)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to set cache", err)
-	}
+	// err := u.cache.Set(ctx, cacheKey, response)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to set cache", err)
+	// }
 
-	account, err := u.accountRepository.FindByAccountNumber(ctx, request.AccountNumber)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find account", err)
-	}
+	// account, err := u.accountRepository.FindByAccountNumber(ctx, request.AccountNumber)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find account", err)
+	// }
 
-	balance, err := u.balanceRepository.FindByAccountID(ctx, account.ID)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find balance", err)
-	}
+	// balance, err := u.balanceRepository.FindByAccountID(ctx, account.ID)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find balance", err)
+	// }
 
-	transactionHistory, err := u.transactionHistoryRepository.Save(ctx, &models.TransactionHistory{
-		AccountID:         account.ID,
-		BalanceID:         balance.ID,
-		TransactionCode:   request.IdempotencyKey,
-		Amount:            request.Amount,
-		TransactionType:   "AUTH",
-		TransactionAmount: request.Amount,
-		TransactionDate:   time.Now(),
-		TransactionStatus: "AUTH",
-	})
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to save transaction history", err)
-	}
+	// transactionHistory, err := u.transactionHistoryRepository.Save(ctx, &models.TransactionHistory{
+	// 	AccountID:         account.ID,
+	// 	BalanceID:         balance.ID,
+	// 	TransactionCode:   request.IdempotencyKey,
+	// 	Amount:            request.Amount,
+	// 	TransactionType:   "AUTH",
+	// 	TransactionAmount: request.Amount,
+	// 	TransactionDate:   time.Now(),
+	// 	TransactionStatus: "AUTH",
+	// })
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to save transaction history", err)
+	// }
 
-	err = u.workflowExecution.SignalWorkflow(ctx, "payment-service"+transactionHistory.TransactionCode, "", "auth", response)
-	if err != nil {
-		log.Println("failed to signal workflow", err)
-	}
+	// err = u.workflowExecution.SignalWorkflow(ctx, "payment-service"+transactionHistory.TransactionCode, "", "auth", response)
+	// if err != nil {
+	// 	log.Println("failed to signal workflow", err)
+	// }
 
-	response.TransactionCode = transactionHistory.TransactionCode
+	// response.TransactionCode = transactionHistory.TransactionCode
 
-	return response, nil
+	return u.authWorkflow.Auth(ctx, request)
 }
 
 func (u *usecases) Capture(ctx context.Context, request *requests.CaptureRequest) (response *responses.TransferResponse, appError *apperror.CustomError) {
-	authCacheKey := fmt.Sprintf("auth:%s:%s", request.AccountNumber, request.IdempotencyKey)
-	authCache, err := u.cache.Get(ctx, authCacheKey)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to get cache", err)
-	}
+	// authCacheKey := fmt.Sprintf("auth:%s:%s", request.AccountNumber, request.IdempotencyKey)
+	// authCache, err := u.cache.Get(ctx, authCacheKey)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to get cache", err)
+	// }
 
-	if authCache == nil || authCache.(*responses.TransferResponse).Status != "AUTH" {
-		return nil, apperror.NewCustomError(apperror.ErrBadRequest, "transaction not found", nil)
-	}
+	// if authCache == nil || authCache.(*responses.TransferResponse).Status != "AUTH" {
+	// 	return nil, apperror.NewCustomError(apperror.ErrBadRequest, "transaction not found", nil)
+	// }
 
-	transactionHistory, err := u.transactionHistoryRepository.FindByTransactionCode(ctx, request.TransactionCode)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find transaction history", err)
-	}
+	// transactionHistory, err := u.transactionHistoryRepository.FindByTransactionCode(ctx, request.TransactionCode)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find transaction history", err)
+	// }
 
-	transactionHistory.TransactionStatus = "CAPTURE"
-	transactionHistory.UpdatedAt = time.Now()
-	_, err = u.transactionHistoryRepository.Update(ctx, transactionHistory)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to update transaction history", err)
-	}
+	// transactionHistory.TransactionStatus = "CAPTURE"
+	// transactionHistory.UpdatedAt = time.Now()
+	// _, err = u.transactionHistoryRepository.Update(ctx, transactionHistory)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to update transaction history", err)
+	// }
 
-	balance, err := u.balanceRepository.FindByID(ctx, transactionHistory.BalanceID)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find balance", err)
-	}
+	// balance, err := u.balanceRepository.FindByID(ctx, transactionHistory.BalanceID)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to find balance", err)
+	// }
 
-	balance.BalanceAmount -= transactionHistory.TransactionAmount
-	_, err = u.balanceRepository.Update(ctx, balance)
-	if err != nil {
-		return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to update balance", err)
-	}
+	// balance.BalanceAmount -= transactionHistory.TransactionAmount
+	// _, err = u.balanceRepository.Update(ctx, balance)
+	// if err != nil {
+	// 	return nil, apperror.NewCustomError(apperror.ErrInternalServer, "failed to update balance", err)
+	// }
 
-	err = u.workflowExecution.SignalWorkflow(ctx, "payment-service"+request.TransactionCode, "", "capture", request)
-	if err != nil {
-		log.Println("failed to signal workflow", err)
-	}
+	// err = u.workflowExecution.SignalWorkflow(ctx, "payment-service"+request.TransactionCode, "", "capture", request)
+	// if err != nil {
+	// 	log.Println("failed to signal workflow", err)
+	// }
 
-	return
+	return u.captureWorkflow.Capture(ctx, request)
 }
 
 func NewUsecases(repositories repositories.Repositories,
