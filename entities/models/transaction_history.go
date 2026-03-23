@@ -4,6 +4,7 @@ import "time"
 
 type TransactionHistory struct {
 	ID                     uint64
+	TransactionCode        string
 	AccountID              uint64
 	BalanceID              uint64
 	Amount                 float64

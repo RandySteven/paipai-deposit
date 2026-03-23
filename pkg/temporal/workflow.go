@@ -89,8 +89,30 @@ type (
 		//GetSignalResult gets the signal result from the Temporal server.
 		//It is used to get the signal result from the Temporal server.
 		GetSignalResult(ctx workflow.Context, signalName string, result interface{}) error
+
+		//SignalExternalWorkflow signals an external workflow.
+		//It is used to signal an external workflow.
+		SignalExternalWorkflow(ctx workflow.Context, workflowID string, runID string, signalName string, arg interface{}) error
+
+		//GetExternalWorkflowResult gets the external workflow result from the Temporal server.
+		//It is used to get the external workflow result from the Temporal server.
+		GetExternalWorkflowResult(ctx workflow.Context, workflowID string, runID string, result interface{}) error
 	}
 )
+
+// GetExternalWorkflowResult implements [WorkflowExecution].
+func (w *WorkflowExecutionData) GetExternalWorkflowResult(ctx workflow.Context, workflowID string, runID string, result interface{}) error {
+	return nil
+}
+
+// SignalExternalWorkflow implements [WorkflowExecution].
+func (w *WorkflowExecutionData) SignalExternalWorkflow(ctx workflow.Context, workflowID string, runID string, signalName string, arg interface{}) error {
+	sigFuture := workflow.SignalExternalWorkflow(ctx, workflowID, runID, signalName, arg)
+	if err := sigFuture.Get(ctx, nil); err != nil {
+		return fmt.Errorf("failed to signal external workflow: %w", err)
+	}
+	return nil
+}
 
 // Execute runs the sequential activity pipeline, threading state through each activity.
 // If the state implements Navigable and an activity sets NextActivity, Execute branches
