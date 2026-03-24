@@ -10,6 +10,12 @@ import (
 	"go.temporal.io/sdk/workflow"
 )
 
+
+type (
+	SignalName   string
+	ActivityName string
+)
+
 type (
 	// Navigable allows the Execute state machine to read which activity
 	// should run next. Any state struct that implements this interface
@@ -97,6 +103,8 @@ type (
 		//GetExternalWorkflowResult gets the external workflow result from the Temporal server.
 		//It is used to get the external workflow result from the Temporal server.
 		GetExternalWorkflowResult(ctx workflow.Context, workflowID string, runID string, result interface{}) error
+
+		WaitForSignal(ctx workflow.Context, signalName string, result interface{}, timeout time.Duration) error
 	}
 )
 
@@ -281,6 +289,20 @@ func (w *WorkflowExecutionData) GetSignalResult(ctx workflow.Context, signalName
 	})
 
 	resultSelector.Select(ctx)
+
+	return nil
+}
+
+func (w *WorkflowExecutionData) WaitForSignal(ctx workflow.Context, signalName string, result interface{}, timeout time.Duration) error {
+	signalChan := workflow.GetSignalChannel(ctx, signalName)
+	
+	timedOut, _ := workflow.AwaitWithTimeout(ctx, timeout, func() bool {
+		return signalChan.ReceiveAsync(result)
+	})
+
+	if timedOut {
+		return fmt.Errorf("signal %s timed out", signalName)
+	}
 
 	return nil
 }
